@@ -11,31 +11,55 @@
     <h1>Importar dados da Corretora Rico.com.vc</h1>
     <p class="lead">Antes de extrair os arquivos Json, logar no site da rico para se obter as credenciais de acesso.</p>
 
-    <form action="/Home/ImportarArquivos" method="post" enctype="multipart/form-data">
-
-        <div class="card" style="width: 40rem;">
+    <h2>Renda Fixa</h2>
+    <div class="card" style="width: 40rem;">
+        <form action="/Home/ImportarArquivoRendaFixa" method="post" enctype="multipart/form-data">
             <div class="card-body">
                 <p>
-                    <a target="_blank" href="http://www.rico.com.vc/login">Site da Rico.com.vc</a> | 
+                    <a target="_blank" href="http://www.rico.com.vc/login">Site da Rico.com.vc</a> |
                     <a href="http://www.rico.com.vc/api/fixed-income/positions/">Download da API de Renda Fixa da Rico.com.vc</a>
                 </p>
                 <p>
                     <label class="custom-file">
-                        <input type="file" name="files" class="custom-file-input">
+                        <input type="file" name="file" class="custom-file-input" id="file-renda-fixa">
                         <span class="custom-file-control"></span>
                     </label>
                 </p>
                 <p id="mensagem-arquivo-1">
-                    Nenhum arquivo selecionado...  
+                    Nenhum arquivo selecionado...
                 </p>
                 <p>
-                    <button type="submit" class="btn btn-primary disabled" disabled="disabled">Enviar arquivos...</button> 
+                    <button type="submit" class="btn btn-primary disabled" disabled="disabled" id="botao-renda-fixa">Enviar arquivos...</button>
                 </p>
             </div>
-        </div>
+        </form>
+    </div>
 
-    </form>
-
+    <h2>Fundos de Investimentos</h2>
+    <div class="card" style="width: 40rem;">
+        <form action="/Home/ImportarArquivoFundosInvestimento" method="post" enctype="multipart/form-data">
+            <div class="card-body">
+                <p>
+                    <a target="_blank" href="http://www.rico.com.vc/login">Site da Rico.com.vc</a> |
+                    <a href="https://www.rico.com.vc/api/funds/position/">Download da API de Posição de Fundos</a> |
+                    <a href="https://www.rico.com.vc/api/funds/offers/">Download da API de Oferta de Fundos</a>
+                </p>
+                <p>
+                    <label class="custom-file">
+                        <input type="file" name="files" class="custom-file-input" id="file-fundos-1">
+                        <input type="file" name="files" class="custom-file-input" id="file-fundos-2">
+                        <span class="custom-file-control">asdasdasd</span>
+                    </label>
+                </p>
+                <p id="mensagem-arquivo-2">
+                    Nenhum arquivo selecionado...
+                </p>
+                <p>
+                    <button type="submit" class="btn btn-primary disabled" disabled="disabled" id="botao-fundos">Enviar arquivos...</button>
+                </p>
+            </div>
+        </form>
+    </div>
 
 </div>
 

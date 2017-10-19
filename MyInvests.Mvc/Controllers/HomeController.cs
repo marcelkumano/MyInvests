@@ -18,27 +18,51 @@ namespace MyInvests.Mvc.Controllers
 
             return View();
         }
+
         [HttpPost]
-        public ActionResult ImportarArquivos(IEnumerable<HttpPostedFileBase> files)
+        public ActionResult ImportarArquivoRendaFixa(HttpPostedFileBase file)
         {
-            foreach (HttpPostedFileBase file in files)
+            if (file != null &&
+                file.ContentLength > 0)
             {
-                if (file!= null &&
-                    file.ContentLength > 0)
-                {
-                    // get contents to string
-                    string str = (new StreamReader(file.InputStream)).ReadToEnd();
+                // get contents to string
+                string str = (new StreamReader(file.InputStream)).ReadToEnd();
 
-                    // deserializes string into object
-                    JavaScriptSerializer jss = new JavaScriptSerializer();
-                    var d = jss.Deserialize<FixedIncomePosition>(str);
+                // deserializes string into object
+                JavaScriptSerializer jss = new JavaScriptSerializer();
+                var d = jss.Deserialize<FixedIncomePosition>(str);
 
-                    Business.CorretoraRico.ImportadorDados.ImportarDadosRendaFixa(d);
-                    // once it's an object, you can use do with it whatever you want
-                }
+                Business.CorretoraRico.ImportadorDadosRendaFixa.Importar(d);
             }
 
-            return View();
+            return View("SucessoImportacao");
+        }
+
+        [HttpPost]
+        public ActionResult ImportarArquivoFundosInvestimento(List<HttpPostedFileBase> files)
+        {
+            HttpPostedFileBase filePosition = files.FirstOrDefault(x => x.FileName.Contains("pos"));
+            HttpPostedFileBase fileOffer = files.FirstOrDefault(x => x.FileName.Contains("off"));
+
+            if (filePosition != null && fileOffer != null)
+            {
+                JavaScriptSerializer jss = new JavaScriptSerializer();
+
+                // get contents to string
+                string strPosition = (new StreamReader(filePosition.InputStream)).ReadToEnd();
+                // deserializes string into object
+                var position = jss.Deserialize<MyInvests.Business.CorretoraRico.JsonModel.Funds.FundsPosition>(strPosition);
+
+                // get contents to string
+                string strOffer = (new StreamReader(fileOffer.InputStream)).ReadToEnd();
+                // deserializes string into object
+                var offer = jss.Deserialize<MyInvests.Business.CorretoraRico.JsonModel.FundsOffer.Offer>(strOffer);
+
+                Business.CorretoraRico.ImportadorDadosFundos.Importar(position, offer);
+            }
+
+            return View("SucessoImportacao");
         }
     }
+
 }

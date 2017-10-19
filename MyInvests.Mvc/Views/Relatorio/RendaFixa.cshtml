@@ -19,7 +19,10 @@
                 <tr class="table-active">
                     <th scope="row">@item.Nome</th>
                     <td>@item.DataCompra.ToShortDateString()</td>
-                    <td>@item.DataVencimento.ToShortDateString()</td>
+                    <td>
+                        @item.DataVencimento.ToShortDateString()
+                        @string.Format("(faltam {0} dias)", (item.DataVencimento - DateTime.Now).TotalDays.ToString("N0"))
+                    </td>
                     <td>@item.ValorCompra.ToString("N2")</td>
                 </tr>
                 <tr>

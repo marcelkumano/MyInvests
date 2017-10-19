@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace MyInvests.Business.CorretoraRico
 {
-    public class ImportadorDados
+    public class ImportadorDadosRendaFixa
     {
-        public static void ImportarDadosRendaFixa(FixedIncomePosition jsonData)
+        public static void Importar(FixedIncomePosition jsonData)
         {
             List<DataEntities.MyInvests.InvestimentoRendaFixaPosicao> baseRendaFixa = LerDadosRendaFixa(jsonData);
 

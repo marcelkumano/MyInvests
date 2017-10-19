@@ -36,6 +36,9 @@ namespace MyInvests.DataAccess.DataContexts
             modelBuilder.Configurations.Add(new Mappings.CategoriaInvestimentoMap());
             modelBuilder.Configurations.Add(new Mappings.InvestimentoRendaFixaPosicaoMap());
 
+            modelBuilder.Configurations.Add(new Mappings.InvestimentoFundosMap());
+            modelBuilder.Configurations.Add(new Mappings.InvestimentoFundosPosicaoMap());
+
             base.OnModelCreating(modelBuilder);
         }
 
@@ -44,6 +47,10 @@ namespace MyInvests.DataAccess.DataContexts
         public DbSet<DataEntities.MyInvests.CategoriaInvestimento> CategoriasInvestimento { get; set; }
 
         public DbSet<DataEntities.MyInvests.InvestimentoRendaFixaPosicao> InvestimentoRendaFixaPosicao { get; set; }
+
+        public DbSet<DataEntities.MyInvests.InvestimentoFundos> InvestimentoFundos { get; set; }
+
+        public DbSet<DataEntities.MyInvests.InvestimentoFundosPosicao> InvestimentoFundosPosicao { get; set; }
 
     }
 

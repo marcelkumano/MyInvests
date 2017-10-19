@@ -46,7 +46,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CorretoraRico\ImportadorDados.cs" />
+    <Compile Include="CorretoraRico\ImportadorDadosFundos.cs" />
+    <Compile Include="CorretoraRico\ImportadorDadosRendaFixa.cs" />
+    <Compile Include="CorretoraRico\JsonModel\FundsOffer.cs" />
+    <Compile Include="CorretoraRico\JsonModel\FundsPosition.cs" />
     <Compile Include="CorretoraRico\JsonModel\FixedIncomePosition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

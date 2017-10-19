@@ -48,6 +48,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataContexts\MyInvestsDataContext.cs" />
+    <Compile Include="Mappings\InvestimentoFundosMap.cs" />
+    <Compile Include="Mappings\InvestimentoFundosPosicaoMap.cs" />
     <Compile Include="Mappings\InvestimentoRendaFixaPosicaoMap.cs" />
     <Compile Include="Mappings\CategoriaInvestimentoMap.cs" />
     <Compile Include="Mappings\InvestimentoRendaFixaMap.cs" />

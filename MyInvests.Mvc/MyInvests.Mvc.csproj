@@ -138,6 +138,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Views\Relatorio\RendaFixa.cshtml" />
     <Content Include="Views\Relatorio\Index.cshtml" />
+    <Content Include="Views\Home\SucessoImportacao.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

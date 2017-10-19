@@ -41,6 +41,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MyInvests\CategoriaInvestimento.cs" />
+    <Compile Include="MyInvests\InvestimentoFundos.cs" />
+    <Compile Include="MyInvests\InvestimentoFundosPosicao.cs" />
     <Compile Include="MyInvests\InvestimentoRendaFixaPosicao.cs" />
     <Compile Include="MyInvests\InvestimentoRendaFixa.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
