@@ -1,0 +1,41 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+@section scripts{
+    <script src="~/Scripts/Views/home.js"></script>
+}
+
+<div class="starter-template">
+    <h1>Importar dados da Corretora Rico.com.vc</h1>
+    <p class="lead">Antes de extrair os arquivos Json, logar no site da rico para se obter as credenciais de acesso.</p>
+
+    <form action="/Home/ImportarArquivos" method="post" enctype="multipart/form-data">
+
+        <div class="card" style="width: 40rem;">
+            <div class="card-body">
+                <p>
+                    <a target="_blank" href="http://www.rico.com.vc/login">Site da Rico.com.vc</a> | 
+                    <a href="http://www.rico.com.vc/api/fixed-income/positions/">Download da API de Renda Fixa da Rico.com.vc</a>
+                </p>
+                <p>
+                    <label class="custom-file">
+                        <input type="file" name="files" class="custom-file-input">
+                        <span class="custom-file-control"></span>
+                    </label>
+                </p>
+                <p id="mensagem-arquivo-1">
+                    Nenhum arquivo selecionado...  
+                </p>
+                <p>
+                    <button type="submit" class="btn btn-primary disabled" disabled="disabled">Enviar arquivos...</button> 
+                </p>
+            </div>
+        </div>
+
+    </form>
+
+
+</div>
+

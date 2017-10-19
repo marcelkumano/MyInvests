@@ -1,0 +1,83 @@
+﻿@using MyInvests.Mvc.Models.Relatorio
+
+@model RendaFixaModel
+
+@if (Model != null)
+{
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Data da Compra</th>
+                <th>Vencimento</th>
+                <th>Valor da Compra</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (RendaFixaModel.InvestimentosModel item in Model.Investimentos)
+            {
+                <tr class="table-active">
+                    <th scope="row">@item.Nome</th>
+                    <td>@item.DataCompra.ToShortDateString()</td>
+                    <td>@item.DataVencimento.ToShortDateString()</td>
+                    <td>@item.ValorCompra.ToString("N2")</td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <table class="table table-sm" style="font-size: 75%; margin-left: 20px;">
+                            <thead>
+                                <tr>
+                                    <th>Data Ref.</th>
+                                    <th>Valor Bruto Atual</th>
+                                    <th>IR</th>
+                                    <th>Valor Liquido Atual</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (RendaFixaModel.PosicaoInvestimentoModel pos in item.PosicaoInvestimento)
+                                {
+                                    <tr>
+                                        <th scope="row">@pos.DataReferencia.ToShortDateString()</th>
+                                        <td>
+                                            @pos.ValorBrutoAtual.ToString("N2")
+
+                                            @if (pos.Variacao.VariacaoValorBruto >= 0)
+                                            {
+                                                <span class="badge badge-success">
+                                                    @string.Format("{0} ({1})", pos.Variacao.VariacaoValorBruto.ToString("N2"), pos.Variacao.PercentualVariacaoBruta.ToString("P3"))
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-danger">
+                                                    @string.Format("{0} ({1})", pos.Variacao.VariacaoValorBruto.ToString("N2"), pos.Variacao.PercentualVariacaoBruta.ToString("P3"))
+                                                </span>
+                                            }
+                                        </td>
+                                        <td>@string.Format("{0} ({1})", @pos.TaxaIR.ToString("P"), @pos.ValorIR.ToString("N2"))</td>
+                                        <td>
+                                            @pos.ValorLiquidoAtual.ToString("N2")
+
+                                            @if (pos.Variacao.VariacaoValorLiquido >= 0)
+                                            {
+                                                <span class="badge badge-success">
+                                                    @string.Format("{0} ({1})", pos.Variacao.VariacaoValorLiquido.ToString("N2"), pos.Variacao.PercentualVariacaoLiquida.ToString("P3"))
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-danger">
+                                                    @string.Format("{0} ({1})", pos.Variacao.VariacaoValorLiquido.ToString("N2"), pos.Variacao.PercentualVariacaoLiquida.ToString("P3"))
+                                                </span>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
