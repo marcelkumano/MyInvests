@@ -1,6 +1,7 @@
 ﻿using MyInvests.Business.CorretoraRico.JsonModel.Funds;
 using MyInvests.Business.CorretoraRico.JsonModel.FundsOffer;
 using MyInvests.DataAccess.DataContexts;
+using MyInvests.DataEntities.MyInvests2.Fundos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,70 +12,132 @@ namespace MyInvests.Business.CorretoraRico
 {
     public class ImportadorDadosFundos
     {
-        public static void Importar(FundsPosition jsonDataFunds, Offer jsonDataOffer)
+        private List<Offer> ListaOfertasFundo { get; set; }
+
+        private FundsPosition PosicaoFundos { get; set; }
+
+        public void Importar(FundsPosition jsonDataFunds, List<Offer> jsonDataOffer)
         {
-            List<DataEntities.MyInvests.InvestimentoRendaFixaPosicao> baseRendaFixa = LerDadosRendaFixa(jsonDataFunds, jsonDataOffer);
+            ListaOfertasFundo = jsonDataOffer;
+            PosicaoFundos = jsonDataFunds;
+
+            List<Investimento> investimentosRico = ObterInformacaoInvestimentos();
 
             using (MyInvestsDataContext context = new MyInvestsDataContext())
             {
                 //ATUALIZAR AS POSICOES
-                foreach (var posicaoRF in baseRendaFixa)
+                foreach (var investimento in investimentosRico)
                 {
-                    var registroDB = context.InvestimentoRendaFixaPosicao
-                                            .Where(x => x.IdInvestimento == posicaoRF.IdInvestimento && 
-                                                        x.DataReferencia == posicaoRF.DataReferencia)
+                    investimento.Fundo = ObterInformacoesFundo(investimento.IdFundo);
+
+                    var registroDB = context.FundosInvestimento
+                                            .Where(x => x.IdFundo == investimento.IdFundo &&
+                                                        x.DataCompra == investimento.DataCompra)
                                             .FirstOrDefault();
 
+
+                    //SALVAR O INVESTIMENTO
                     if (registroDB == null)
                     {
-                        var investDB = context.InvestimentoRendaFixa.FirstOrDefault(x => x.Id == posicaoRF.IdInvestimento);
+                        var fundoDB = context.Fundos.FirstOrDefault(x => x.Id == investimento.IdFundo);
 
-                        if (investDB != null)
+                        //se o fundo ja existir usar o que tem na base
+                        if (fundoDB != null)
                         {
-                            posicaoRF.Investimento = investDB;
+                            investimento.Fundo = fundoDB;
                         }
 
-                        registroDB = context.InvestimentoRendaFixaPosicao.Add(posicaoRF);
+                        registroDB = context.FundosInvestimento.Add(investimento);
+                        context.SaveChanges();
+                    }
+                    else
+                    {
+                        registroDB.ValorIR = investimento.ValorIR;
+                        context.SaveChanges();
+                    }
+
+
+                    //SALVAR A POSICAO DO FUNDO
+                    var posicaoFundo = ObterInformacoesPosicao(investimento.IdFundo);
+
+                    var posicaoDB = context.FundosPosicao
+                                           .Where(x => x.IdFundo == posicaoFundo.IdFundo &&
+                                                       x.DataReferencia == posicaoFundo.DataReferencia)
+                                           .FirstOrDefault();
+
+                    if (posicaoDB == null)
+                    {
+                        var fundoDB = context.Fundos.FirstOrDefault(x => x.Id == investimento.IdFundo);
+
+                        //se o fundo ja existir usar o que tem na base
+                        if (fundoDB != null)
+                        {
+                            posicaoFundo.Fundo = fundoDB;
+                        }
+
+                        context.FundosPosicao.Add(posicaoFundo);
                         context.SaveChanges();
                     }
                 }
             }
         }
 
-        private static List<DataEntities.MyInvests.InvestimentoFundosPosicao> LerDadosRendaFixa(FundsPosition jsonDataFunds, Offer jsonDataOffer)
+        private List<Investimento> ObterInformacaoInvestimentos()
         {
-            List<DataEntities.MyInvests.InvestimentoFundosPosicao> baseInvestimentoRendaFixa = new List<DataEntities.MyInvests.InvestimentoFundosPosicao>();
+            List<Investimento> investimentosFundos = new List<Investimento>();
 
-            foreach (var fundosPosition in jsonDataFunds.positions)
+            foreach (var fundosPosition in this.PosicaoFundos.positions)
             {
                 foreach (var detail in fundosPosition.details)
                 {
-                    DataEntities.MyInvests.InvestimentoFundosPosicao novaPosicaoRF = new DataEntities.MyInvests.InvestimentoFundosPosicao();
+                    Investimento novoInvestimento = new Investimento();
 
-                    novaPosicaoRF.DataAtualizacao = DateTime.Now;
-                    novaPosicaoRF.Id = 0;
-                    novaPosicaoRF.ValorAtual = detail.currentValueGross;
-                    novaPosicaoRF.ValorIR = detail.incomeTax;
+                    novoInvestimento.IdFundo = fundosPosition.fund.id;
+                    novoInvestimento.DataCompra = detail.date;
+                    novoInvestimento.QuantidadeCotas = detail.buyTotalQuantity;
+                    novoInvestimento.ValorCompraCota = detail.quoteValue;
+                    novoInvestimento.ValorIR = detail.incomeTax;
 
-                    novaPosicaoRF.DataReferencia = 0;
-                    novaPosicaoRF.ValorPorQuota = 0;
-                    novaPosicaoRF.TaxaIR = 0;
-
-                    novaPosicaoRF.Investimento = new DataEntities.MyInvests.InvestimentoFundos();
-                    novaPosicaoRF.Investimento.IdFundoRico = fundosPosition.fund.id;
-                    novaPosicaoRF.Investimento.Nome = position.order.offer.issuer.mnemonic;
-                    novaPosicaoRF.Investimento.Unidades = position.quantity;
-                    novaPosicaoRF.Investimento.ValorCompra = position.buyTotalValue;
-                    novaPosicaoRF.Investimento.DataCadastro = DateTime.Now;
-                    novaPosicaoRF.Investimento.DataCompra = position.order.dateOrder;
-                    novaPosicaoRF.Investimento.DataVencimento = position.order.offer.maturityDate;
-                    novaPosicaoRF.Investimento.IdCategoria = 1;
-
-                    baseInvestimentoRendaFixa.Add(novaPosicaoRF);
+                    investimentosFundos.Add(novoInvestimento);
                 }
             }
 
-            return baseInvestimentoRendaFixa;
+            return investimentosFundos;
+        }
+
+        public Fundo ObterInformacoesFundo(int idFund)
+        {
+            var obj = this.ListaOfertasFundo.Where(x => x.id == idFund).FirstOrDefault();
+
+            if (obj == null)
+            {
+               return new Fundo();
+            }
+
+            return new Fundo()
+            {
+                Id = obj.id,
+                Nome = obj.name,
+                DescricaoTipo = obj.typeName,
+                DataAtualizacao = DateTime.Now
+            };
+        }
+
+        public PosicaoFundo ObterInformacoesPosicao(int idFund)
+        {
+            var obj = this.ListaOfertasFundo.Where(x => x.id == idFund).FirstOrDefault();
+
+            if (obj == null)
+            {
+                return new PosicaoFundo();
+            }
+
+            return new PosicaoFundo()
+            {
+                IdFundo = obj.id,
+                DataReferencia = obj.netAssetValueDate,
+                ValorPorCota = obj.netAssetValue
+            };
         }
 
         private static decimal CalcularTaxaIR(decimal valorCompra, decimal valorAtual, decimal valorIR)

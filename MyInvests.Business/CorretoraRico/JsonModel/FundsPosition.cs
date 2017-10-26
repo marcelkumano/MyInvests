@@ -45,6 +45,8 @@ namespace MyInvests.Business.CorretoraRico.JsonModel.Funds
         public string movementType { get; set; }
         public decimal netWorth { get; set; }
 
+        public decimal quoteValue { get; set; }
+
     }
 
     public class Fund

@@ -36,8 +36,9 @@ namespace MyInvests.DataAccess.DataContexts
             modelBuilder.Configurations.Add(new Mappings.CategoriaInvestimentoMap());
             modelBuilder.Configurations.Add(new Mappings.InvestimentoRendaFixaPosicaoMap());
 
-            modelBuilder.Configurations.Add(new Mappings.InvestimentoFundosMap());
-            modelBuilder.Configurations.Add(new Mappings.InvestimentoFundosPosicaoMap());
+            modelBuilder.Configurations.Add(new Mappings.Fundos.FundoMap());
+            modelBuilder.Configurations.Add(new Mappings.Fundos.InvestimentoMap());
+            modelBuilder.Configurations.Add(new Mappings.Fundos.PosicaoFundoMap());
 
             base.OnModelCreating(modelBuilder);
         }
@@ -48,9 +49,11 @@ namespace MyInvests.DataAccess.DataContexts
 
         public DbSet<DataEntities.MyInvests.InvestimentoRendaFixaPosicao> InvestimentoRendaFixaPosicao { get; set; }
 
-        public DbSet<DataEntities.MyInvests.InvestimentoFundos> InvestimentoFundos { get; set; }
+        public DbSet<DataEntities.MyInvests2.Fundos.Fundo> Fundos { get; set; }
 
-        public DbSet<DataEntities.MyInvests.InvestimentoFundosPosicao> InvestimentoFundosPosicao { get; set; }
+        public DbSet<DataEntities.MyInvests2.Fundos.Investimento> FundosInvestimento { get; set; }
+
+        public DbSet<DataEntities.MyInvests2.Fundos.PosicaoFundo> FundosPosicao { get; set; }
 
     }
 
@@ -65,16 +68,6 @@ namespace MyInvests.DataAccess.DataContexts
     {
         protected override void Seed(MyInvestsDataContext context)
         {
-            //context.Category.Add(new Domain.Category() { Id = 1, Title = "Informática" });
-            //context.Category.Add(new Domain.Category() { Id = 2, Title = "Games" });
-            //context.Category.Add(new Domain.Category() { Id = 3, Title = "Papelaria" });
-            //context.SaveChanges();
-
-            //context.Products.Add(new Domain.Product() { Id = 1, CategoryId = 1, IsActive = true, Title = "Produto 1" });
-            //context.Products.Add(new Domain.Product() { Id = 2, CategoryId = 1, IsActive = true, Title = "Produto 2" });
-            //context.Products.Add(new Domain.Product() { Id = 3, CategoryId = 1, IsActive = true, Title = "Produto 3" });
-            //context.SaveChanges();
-
             base.Seed(context);
         }
     }
@@ -100,10 +93,6 @@ namespace MyInvests.DataAccess.DataContexts
 
         protected void Seed(MyInvestsDataContext context)
         {
-            context.CategoriasInvestimento.Add(new DataEntities.MyInvests.CategoriaInvestimento() { Id = 1, Nome = "Renda Fixa" });
-            context.CategoriasInvestimento.Add(new DataEntities.MyInvests.CategoriaInvestimento() { Id = 2, Nome = "Fundos de Investimento" });
-
-            context.SaveChanges();
         }
     }
 }

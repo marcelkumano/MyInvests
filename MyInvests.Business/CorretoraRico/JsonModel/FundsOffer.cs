@@ -12,11 +12,14 @@ namespace MyInvests.Business.CorretoraRico.JsonModel.FundsOffer
 
         public int id { get; set; }
 
+        public string name { get; set; }
+
+        public string typeName { get; set; }
+
         public decimal netAssetValue { get; set; }
 
-        public decimal netAssetValueDate { get; set; }
+        public DateTime netAssetValueDate { get; set; }
 
-        public List<Position> positions { get; set; }
 
     }
     

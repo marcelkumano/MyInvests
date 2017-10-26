@@ -42,7 +42,7 @@ namespace MyInvests.Mvc.Controllers
         public ActionResult ImportarArquivoFundosInvestimento(List<HttpPostedFileBase> files)
         {
             HttpPostedFileBase filePosition = files.FirstOrDefault(x => x.FileName.Contains("pos"));
-            HttpPostedFileBase fileOffer = files.FirstOrDefault(x => x.FileName.Contains("off"));
+            HttpPostedFileBase fileOffer = files.FirstOrDefault(x => x.FileName.Contains("of"));
 
             if (filePosition != null && fileOffer != null)
             {
@@ -56,9 +56,9 @@ namespace MyInvests.Mvc.Controllers
                 // get contents to string
                 string strOffer = (new StreamReader(fileOffer.InputStream)).ReadToEnd();
                 // deserializes string into object
-                var offer = jss.Deserialize<MyInvests.Business.CorretoraRico.JsonModel.FundsOffer.Offer>(strOffer);
+                var offer = jss.Deserialize<List<MyInvests.Business.CorretoraRico.JsonModel.FundsOffer.Offer>>(strOffer);
 
-                Business.CorretoraRico.ImportadorDadosFundos.Importar(position, offer);
+                new Business.CorretoraRico.ImportadorDadosFundos().Importar(position, offer);
             }
 
             return View("SucessoImportacao");
