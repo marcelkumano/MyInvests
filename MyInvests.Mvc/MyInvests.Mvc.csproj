@@ -124,6 +124,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Relatorio\FundosModel.cs" />
     <Compile Include="Models\Relatorio\RendaFixaModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -139,6 +140,7 @@
     <Content Include="Views\Relatorio\RendaFixa.cshtml" />
     <Content Include="Views\Relatorio\Index.cshtml" />
     <Content Include="Views\Home\SucessoImportacao.cshtml" />
+    <Content Include="Views\Relatorio\Fundos.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -16,6 +16,39 @@ namespace MyInvests.Mvc.Controllers
             return View();
         }
 
+        public ActionResult Fundos()
+        {
+            FundosModel model = new FundosModel();
+
+            using (MyInvestsDataContext context = new MyInvestsDataContext())
+            {
+                foreach (var itemFundoDB in context.Fundos.ToList())
+                {
+
+                    context.FundosInvestimento.GroupBy( i => i.IdFundo, )
+
+                    FundosModel.InvestimentosModel investModel = new FundosModel.InvestimentosModel();
+
+
+                    investModel.DataCompra = ;
+                    investModel.Nome = ;
+                    investModel.RendimentoBruto = ;
+                    investModel.RendimentoLiquido = ;
+                    investModel.TaxaIR = ;
+                    investModel.TaxaRendimentoBruto = ;
+                    investModel.TaxaRendimentoLiquido = ;
+                    investModel.Tipo = ;
+                    investModel.ValorAtualBruto = ;
+                    investModel.ValorAtualLiquido = ;
+                    investModel.ValorCompra = ;
+                    investModel.ValorIR = ;
+
+                }
+            }
+
+            return PartialView(model);
+        }
+
         public ActionResult RendaFixa()
         {
             RendaFixaModel model = new RendaFixaModel();
