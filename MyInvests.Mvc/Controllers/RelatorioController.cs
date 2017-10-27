@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using EntityFundos = MyInvests.DataEntities.MyInvests2.Fundos;
 
 namespace MyInvests.Mvc.Controllers
 {
@@ -24,25 +25,31 @@ namespace MyInvests.Mvc.Controllers
             {
                 foreach (var itemFundoDB in context.Fundos.ToList())
                 {
+                    foreach (var itemMeuInvestimentoDB in context.FundosInvestimento.Where(i => i.IdFundo == itemFundoDB.Id).ToList())
+                    {
+                        FundosModel.InvestimentosModel investModel = new FundosModel.InvestimentosModel();
+                        var posicaoFundo = ObterPosicaoAtualFundo(context, itemFundoDB.Id);
 
-                    context.FundosInvestimento.GroupBy( i => i.IdFundo, )
+                        investModel.Nome = itemFundoDB.Nome;
+                        investModel.Tipo = itemFundoDB.DescricaoTipo;
 
-                    FundosModel.InvestimentosModel investModel = new FundosModel.InvestimentosModel();
+                        investModel.DataCompra = itemMeuInvestimentoDB.DataCompra;
+                        investModel.ValorIR = itemMeuInvestimentoDB.ValorIR;
 
+                        investModel.ValorCompra = itemMeuInvestimentoDB.QuantidadeCotas * itemMeuInvestimentoDB.ValorCompraCota;
+                        investModel.ValorAtualBruto = itemMeuInvestimentoDB.QuantidadeCotas * posicaoFundo.ValorPorCota;
+                        investModel.ValorAtualLiquido = investModel.ValorAtualBruto - investModel.ValorIR;
 
-                    investModel.DataCompra = ;
-                    investModel.Nome = ;
-                    investModel.RendimentoBruto = ;
-                    investModel.RendimentoLiquido = ;
-                    investModel.TaxaIR = ;
-                    investModel.TaxaRendimentoBruto = ;
-                    investModel.TaxaRendimentoLiquido = ;
-                    investModel.Tipo = ;
-                    investModel.ValorAtualBruto = ;
-                    investModel.ValorAtualLiquido = ;
-                    investModel.ValorCompra = ;
-                    investModel.ValorIR = ;
+                        investModel.RendimentoBruto = investModel.ValorAtualBruto - investModel.ValorCompra;
+                        investModel.RendimentoLiquido = investModel.ValorAtualLiquido - investModel.ValorCompra;
+                        investModel.TaxaRendimentoBruto = investModel.RendimentoBruto / investModel.ValorCompra;
+                        investModel.TaxaRendimentoLiquido = investModel.RendimentoLiquido / investModel.ValorCompra;
 
+                        investModel.TaxaIR = investModel.ValorIR / investModel.RendimentoBruto;
+                        investModel.DataReferenciaPosicao = posicaoFundo.DataReferencia;
+
+                        model.Investimentos.Add(investModel);
+                    }
                 }
             }
 
@@ -67,7 +74,8 @@ namespace MyInvests.Mvc.Controllers
 
                     novoModelInvestimento.PosicaoInvestimento =
                         context.InvestimentoRendaFixaPosicao.Where(x => x.IdInvestimento == investEntDB.Id)
-                                                            .Select(x => new RendaFixaModel.PosicaoInvestimentoModel() {
+                                                            .Select(x => new RendaFixaModel.PosicaoInvestimentoModel()
+                                                            {
                                                                 DataReferencia = x.DataReferencia,
                                                                 TaxaIR = x.TaxaIR,
                                                                 ValorBrutoAtual = x.ValorAtual,
@@ -93,7 +101,7 @@ namespace MyInvests.Mvc.Controllers
                             variacao.VariacaoValorLiquido = posicaoAtual.ValorBrutoAtual -
                                                             posicaoAnterior.ValorBrutoAtual;
 
-                            variacao.PercentualVariacaoBruta = variacao.VariacaoValorBruto  / posicaoAnterior.ValorBrutoAtual;
+                            variacao.PercentualVariacaoBruta = variacao.VariacaoValorBruto / posicaoAnterior.ValorBrutoAtual;
 
                             variacao.PercentualVariacaoLiquida = variacao.VariacaoValorLiquido / posicaoAnterior.ValorLiquidoAtual;
                         }
@@ -106,6 +114,16 @@ namespace MyInvests.Mvc.Controllers
             }
 
             return PartialView(model);
+        }
+
+        public EntityFundos.PosicaoFundo ObterPosicaoAtualFundo(MyInvestsDataContext context, int idfundo)
+        {
+            DateTime ultimaDataReferencia = context.FundosPosicao.Where(i => i.IdFundo == idfundo).Max(i => i.DataReferencia);
+
+            var retorno = context.FundosPosicao.Where(i => i.IdFundo == idfundo && i.DataReferencia == ultimaDataReferencia).FirstOrDefault();
+
+
+            return retorno;
         }
     }
 }

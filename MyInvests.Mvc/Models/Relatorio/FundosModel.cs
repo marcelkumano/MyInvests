@@ -20,6 +20,8 @@ namespace MyInvests.Mvc.Models.Relatorio
 
             public string Tipo { get; set; }
 
+            public DateTime DataReferenciaPosicao { get; set; }
+
             public DateTime DataCompra { get; set; }
 
             public decimal ValorCompra { get; set; }

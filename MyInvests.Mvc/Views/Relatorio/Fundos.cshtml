@@ -1,84 +1,44 @@
 ﻿@using MyInvests.Mvc.Models.Relatorio
 
-@model RendaFixaModel
+@model FundosModel
 
 @if (Model != null)
 {
-    <table class="table table-sm">
+    <table class="table table-sm" style="font-size: 75%">
         <thead>
             <tr>
                 <th>Nome</th>
-                <th>Data da Compra</th>
-                <th>Vencimento</th>
-                <th>Valor da Compra</th>
+                <th>Data Compra</th>
+                <th class="text-right">Valor Compra</th>
+                <th class="text-right">Valor Atual Bruto</th>
+                <th class="text-right">IR</th>
+                <th class="text-right">Valor Atual Liquido</th>
+                <th class="text-right">Rendimento Bruto</th>
+                <th class="text-right">Rendimento Liquido</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (RendaFixaModel.InvestimentosModel item in Model.Investimentos)
+            @foreach (FundosModel.InvestimentosModel investModel in Model.Investimentos)
             {
                 <tr class="table-active">
-                    <th scope="row">@item.Nome</th>
-                    <td>@item.DataCompra.ToShortDateString()</td>
-                    <td>
-                        @item.DataVencimento.ToShortDateString()
-                        @string.Format("(faltam {0} dias)", (item.DataVencimento - DateTime.Now).TotalDays.ToString("N0"))
+                    <td title="@investModel.Nome">
+                        @if (investModel.DataReferenciaPosicao < DateTime.Now.Date.AddDays(-1))
+                        {
+                            <span class="badge badge-warning" title="@investModel.DataReferenciaPosicao.ToShortDateString()">@investModel.DataReferenciaPosicao.ToString("dd/MM")</span>
+                        }
+                        else
+                        {
+                            <span class="badge badge-success" title="@investModel.DataReferenciaPosicao.ToShortDateString()">@investModel.DataReferenciaPosicao.ToString("dd/MM")</span>
+                        }
+                        @(investModel.Nome.PadRight(100).Substring(0,15))...
                     </td>
-                    <td>@item.ValorCompra.ToString("N2")</td>
-                </tr>
-                <tr>
-                    <td colspan="4">
-                        <table class="table table-sm" style="font-size: 75%; margin-left: 20px;">
-                            <thead>
-                                <tr>
-                                    <th>Data Ref.</th>
-                                    <th>Valor Bruto Atual</th>
-                                    <th>IR</th>
-                                    <th>Valor Liquido Atual</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (RendaFixaModel.PosicaoInvestimentoModel pos in item.PosicaoInvestimento)
-                                {
-                                    <tr>
-                                        <th scope="row">@pos.DataReferencia.ToShortDateString()</th>
-                                        <td>
-                                            @pos.ValorBrutoAtual.ToString("N2")
-
-                                            @if (pos.Variacao.VariacaoValorBruto >= 0)
-                                            {
-                                                <span class="badge badge-success">
-                                                    @string.Format("{0} ({1})", pos.Variacao.VariacaoValorBruto.ToString("N2"), pos.Variacao.PercentualVariacaoBruta.ToString("P3"))
-                                                </span>
-                                            }
-                                            else
-                                            {
-                                                <span class="badge badge-danger">
-                                                    @string.Format("{0} ({1})", pos.Variacao.VariacaoValorBruto.ToString("N2"), pos.Variacao.PercentualVariacaoBruta.ToString("P3"))
-                                                </span>
-                                            }
-                                        </td>
-                                        <td>@string.Format("{0} ({1})", @pos.TaxaIR.ToString("P"), @pos.ValorIR.ToString("N2"))</td>
-                                        <td>
-                                            @pos.ValorLiquidoAtual.ToString("N2")
-
-                                            @if (pos.Variacao.VariacaoValorLiquido >= 0)
-                                            {
-                                                <span class="badge badge-success">
-                                                    @string.Format("{0} ({1})", pos.Variacao.VariacaoValorLiquido.ToString("N2"), pos.Variacao.PercentualVariacaoLiquida.ToString("P3"))
-                                                </span>
-                                            }
-                                            else
-                                            {
-                                                <span class="badge badge-danger">
-                                                    @string.Format("{0} ({1})", pos.Variacao.VariacaoValorLiquido.ToString("N2"), pos.Variacao.PercentualVariacaoLiquida.ToString("P3"))
-                                                </span>
-                                            }
-                                        </td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </td>
+                    <td>@investModel.DataCompra.ToShortDateString() | @((DateTime.Now.Date - investModel.DataCompra).TotalDays.ToString("N0")) dias | @(((DateTime.Now.Date - investModel.DataCompra).TotalDays / 30).ToString("N1")) meses</td>
+                    <td class="text-right">@investModel.ValorCompra.ToString("N2")</td>
+                    <td class="text-right">@investModel.ValorAtualBruto.ToString("N2")</td>
+                    <td class="text-right">@investModel.ValorIR.ToString("N2") (@investModel.TaxaIR.ToString("P2"))</td>
+                    <td class="text-right">@investModel.ValorAtualLiquido.ToString("N2")</td>
+                    <td class="text-right">@investModel.RendimentoBruto.ToString("N2") (@investModel.TaxaRendimentoBruto.ToString("P2")) </td>
+                    <td class="text-right">@investModel.RendimentoLiquido.ToString("N2") (@investModel.TaxaRendimentoLiquido.ToString("P2"))</td>
                 </tr>
             }
         </tbody>
