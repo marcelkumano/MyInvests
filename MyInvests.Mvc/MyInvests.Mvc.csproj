@@ -141,6 +141,7 @@
     <Content Include="Views\Relatorio\Index.cshtml" />
     <Content Include="Views\Home\SucessoImportacao.cshtml" />
     <Content Include="Views\Relatorio\Fundos.cshtml" />
+    <Content Include="App_Data\dbMyInvests.zip" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -148,9 +149,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\MyInvests.Business\MyInvests.Business.csproj">
       <Project>{1e744cf1-04c8-43bf-b622-19918f4c90b6}</Project>

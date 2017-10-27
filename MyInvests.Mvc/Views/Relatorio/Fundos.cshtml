@@ -20,15 +20,15 @@
         <tbody>
             @foreach (FundosModel.InvestimentosModel investModel in Model.Investimentos)
             {
-                <tr class="table-active">
+                <tr class="table-primary">
                     <td title="@investModel.Nome">
                         @if (investModel.DataReferenciaPosicao < DateTime.Now.Date.AddDays(-1))
                         {
-                            <span class="badge badge-warning" title="@investModel.DataReferenciaPosicao.ToShortDateString()">@investModel.DataReferenciaPosicao.ToString("dd/MM")</span>
+                            <span class="badge badge-warning" title="Data referência da atualização: @investModel.DataReferenciaPosicao.ToShortDateString()">@investModel.DataReferenciaPosicao.ToString("dd/MM")</span>
                         }
                         else
                         {
-                            <span class="badge badge-success" title="@investModel.DataReferenciaPosicao.ToShortDateString()">@investModel.DataReferenciaPosicao.ToString("dd/MM")</span>
+                            <span class="badge badge-success" title="Data referência da atualização: @investModel.DataReferenciaPosicao.ToShortDateString()">@investModel.DataReferenciaPosicao.ToString("dd/MM")</span>
                         }
                         @(investModel.Nome.PadRight(100).Substring(0,15))...
                     </td>
@@ -41,7 +41,7 @@
                     <td class="text-right">@investModel.RendimentoLiquido.ToString("N2") (@investModel.TaxaRendimentoLiquido.ToString("P2"))</td>
                 </tr>
                 <tr>
-                    <td colspan="8" >
+                    <td colspan="8">
                         <table class="table table-sm float-right" style="font-size: 90%; width: 60%">
                             <thead>
                                 <tr>
@@ -55,7 +55,7 @@
                             <tbody>
                                 @foreach (var pos in investModel.HistoricoPosicoes)
                                 {
-                                    <tr>
+                                    <tr class="@(pos.TaxaVariacao < 0 ? "table-danger" : "")" >
                                         <td>@pos.DataReferencia.ToShortDateString()</td>
                                         <td class="text-right">@pos.ValorCota.ToString("N5")</td>
                                         <td class="text-right">@pos.ValorTotalBruto.ToString("N2")</td>
