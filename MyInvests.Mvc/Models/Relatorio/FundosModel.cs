@@ -16,6 +16,11 @@ namespace MyInvests.Mvc.Models.Relatorio
 
         public class InvestimentosModel
         {
+            public InvestimentosModel()
+            {
+                HistoricoPosicoes = new List<PosicaoFundoModel>();
+            }
+
             public string Nome { get; set; }
 
             public string Tipo { get; set; }
@@ -42,6 +47,21 @@ namespace MyInvests.Mvc.Models.Relatorio
 
             public decimal TaxaRendimentoLiquido { get; set; }
 
+            public List<PosicaoFundoModel> HistoricoPosicoes { get; set; }
+
+        }
+
+        public class PosicaoFundoModel
+        {
+            public DateTime DataReferencia { get; set; }
+
+            public decimal ValorCota { get; set; }
+
+            public decimal ValorTotalBruto { get; set; }
+
+            public decimal ValorVariacaoBruto { get; set; }
+
+            public decimal TaxaVariacao { get; set; }
         }
 
     }

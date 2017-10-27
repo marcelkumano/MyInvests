@@ -48,6 +48,8 @@ namespace MyInvests.Mvc.Controllers
                         investModel.TaxaIR = investModel.ValorIR / investModel.RendimentoBruto;
                         investModel.DataReferenciaPosicao = posicaoFundo.DataReferencia;
 
+                        investModel.HistoricoPosicoes = CalcularHistoricoPosicao(context, itemMeuInvestimentoDB);
+
                         model.Investimentos.Add(investModel);
                     }
                 }
@@ -122,6 +124,35 @@ namespace MyInvests.Mvc.Controllers
 
             var retorno = context.FundosPosicao.Where(i => i.IdFundo == idfundo && i.DataReferencia == ultimaDataReferencia).FirstOrDefault();
 
+            return retorno;
+        }
+
+        public List<FundosModel.PosicaoFundoModel> CalcularHistoricoPosicao(MyInvestsDataContext context, EntityFundos.Investimento meuInvestimento)
+        {
+            List<FundosModel.PosicaoFundoModel> retorno = new List<FundosModel.PosicaoFundoModel>();
+
+            var posicoesFundo = context.FundosPosicao.Where(i => i.IdFundo == meuInvestimento.IdFundo).OrderByDescending(i => i.DataReferencia).ToList();
+
+            for (int i = 0; i < posicoesFundo.Count(); i++)
+            {
+                EntityFundos.PosicaoFundo posicaoAtual = posicoesFundo.ElementAtOrDefault(i);
+                EntityFundos.PosicaoFundo posicaoAnterior = posicoesFundo.ElementAtOrDefault(i + 1);
+
+                FundosModel.PosicaoFundoModel model = new FundosModel.PosicaoFundoModel();
+
+                model.DataReferencia = posicaoAtual.DataReferencia;
+                model.ValorCota = posicaoAtual.ValorPorCota;
+                model.ValorTotalBruto = meuInvestimento.QuantidadeCotas * posicaoAtual.ValorPorCota;
+
+                if (posicaoAnterior != null)
+                {
+                    model.TaxaVariacao = (posicaoAtual.ValorPorCota / posicaoAnterior.ValorPorCota) - 1M;
+                    model.ValorVariacaoBruto = model.ValorTotalBruto - (meuInvestimento.QuantidadeCotas * posicaoAnterior.ValorPorCota);
+                }
+
+                retorno.Add(model);
+
+            }
 
             return retorno;
         }

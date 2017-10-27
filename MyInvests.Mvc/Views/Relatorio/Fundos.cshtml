@@ -40,6 +40,33 @@
                     <td class="text-right">@investModel.RendimentoBruto.ToString("N2") (@investModel.TaxaRendimentoBruto.ToString("P2")) </td>
                     <td class="text-right">@investModel.RendimentoLiquido.ToString("N2") (@investModel.TaxaRendimentoLiquido.ToString("P2"))</td>
                 </tr>
+                <tr>
+                    <td colspan="8" >
+                        <table class="table table-sm float-right" style="font-size: 90%; width: 60%">
+                            <thead>
+                                <tr>
+                                    <th>Data Ref.</th>
+                                    <th class="text-right">Cota</th>
+                                    <th class="text-right">Total Bruto</th>
+                                    <th class="text-right">Variação Bruto</th>
+                                    <th class="text-right">Taxa Variação</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var pos in investModel.HistoricoPosicoes)
+                                {
+                                    <tr>
+                                        <td>@pos.DataReferencia.ToShortDateString()</td>
+                                        <td class="text-right">@pos.ValorCota.ToString("N5")</td>
+                                        <td class="text-right">@pos.ValorTotalBruto.ToString("N2")</td>
+                                        <td class="text-right">@pos.ValorVariacaoBruto.ToString("N2")</td>
+                                        <td class="text-right">@pos.TaxaVariacao.ToString("P2")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
             }
         </tbody>
     </table>
