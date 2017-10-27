@@ -150,6 +150,7 @@ namespace MyInvests.Mvc.Controllers
                     model.ValorVariacaoBruto = model.ValorTotalBruto - (meuInvestimento.QuantidadeCotas * posicaoAnterior.ValorPorCota);
                 }
 
+
                 retorno.Add(model);
 
             }
